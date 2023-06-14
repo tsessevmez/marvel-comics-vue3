@@ -28,8 +28,4 @@ const router = useRouter();
 const goHome = () => {
   router.push("/");
 };
-
-// watch(favoriteItemCount, (newVal, oldVal) => {
-//   console.log("favoriteItemCount değişti:", newVal, oldVal);
-// });
 </script>

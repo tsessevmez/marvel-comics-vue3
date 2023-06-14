@@ -26,11 +26,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
+import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-const route = useRoute();
 const router = useRouter();
 
 const store = useStore();
@@ -41,12 +40,4 @@ const getFavoriteComic = (id: number) => {
 };
 
 const favoriteItems = computed(() => store.getters["favoriteItemData"]);
-
-// watch(
-//   () => store.state.favoriteItems,
-//   (newFavoriteItems) => {
-//     favoriteComics.value = newFavoriteItems;
-//     console.log("favoriteItems değişti:", newFavoriteItems);
-//   }
-// );
 </script>

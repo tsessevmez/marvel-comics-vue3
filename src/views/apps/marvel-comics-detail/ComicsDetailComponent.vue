@@ -20,7 +20,7 @@
                   <v-btn
                     icon
                     class="icon-button"
-                    @click="handleClick(dataDetail)"
+                    @click="addOrRemoveFavorite(dataDetail)"
                   >
                     <v-icon
                       :icon="
@@ -84,11 +84,10 @@
 
 <script lang="ts" setup>
 import "vue3-carousel/dist/carousel.css";
-import { computed, onMounted, watch } from "vue";
+import { onMounted, watch } from "vue";
 // import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import { getComicsDetail, data } from "./services/comicsDetail";
 import { useRoute } from "vue-router";
-import { addToFavorites, removeToFavorites } from "../../../utils/myUtils";
 import { useStore } from "vuex";
 import Loading from "../../../components/Loading.vue";
 
@@ -96,11 +95,22 @@ const route = useRoute();
 
 const store = useStore();
 
+/**
+ * Verilen bir comic detayının favorilerde olup olmadığını kontrol eder.
+ *
+ * @param dataDetail - Kontrol edilecek comic detayı
+ * @returns {boolean} - Comic detayının favorilerde olup olmadığına dair değer
+ */
 const isFavorite = (dataDetail) => {
   return store.getters.isItemInFavorites(dataDetail);
 };
 
-const handleClick = (dataDetail, id) => {
+/**
+ * Verilen comic detayını favorilere ekler veya favorilerden kaldırır.
+ *
+ * @param dataDetail - İşlem yapılacak comic detayı
+ */
+const addOrRemoveFavorite = (dataDetail) => {
   const isFavorite = store.getters.isItemInFavorites(dataDetail);
 
   if (isFavorite) {
@@ -110,25 +120,34 @@ const handleClick = (dataDetail, id) => {
   }
 };
 
-// watch(
-//   () => store.state.favoriteItems,
-//   (newFavoriteItems) => {
-//     favoriteComics.value = newFavoriteItems;
-//     console.log("favoriteItems değişti:", newFavoriteItems);
-//   }
-// );
-
+/**
+ * Sayfa yüklendiğinde çalışacak kodları içeren fonksiyon.
+ * - Geçerli URL'den alınan `id` parametresini elde eder.
+ * - `id` parametresi dizi ise ilk elemanını alır, değilse doğrudan kullanır.
+ * @remarks
+ * Bu fonksiyon, sayfa yüklendiğinde çağrılmalıdır.
+ */
 onMounted(() => {
-  // Sayfa yüklendiğinde çalışacak kodlar
-  const id: number = Array.isArray(route.params.id)
+  // URL'den id parametresini al
+  const id: string = Array.isArray(route.params.id)
     ? route.params.id[0]
     : route.params.id;
+
+  // id'yi tam sayıya dönüştür ve getComicsDetail fonksiyonunu çağır
   getComicsDetail(parseInt(id));
 });
 
+/**
+ * `route.params.id` değiştiğinde çalışacak izleyici (watcher) fonksiyonu.
+ * - Yeni `id` değerini tam sayıya dönüştürerek `getComicsDetail` fonksiyonunu çağırır.
+ * @param newId - Yeni `id` değeri.
+ * @remarks
+ * Bu izleyici fonksiyon, `route.params.id` değiştiğinde otomatik olarak çağrılır.
+ */
 watch(
-  () => route.params.id,
-  (newId, oldId) => {
+  () => route.params.id, // İzlenen değer: route.params.id
+  (newId: string) => {
+    // Yeni id değerini tam sayıya dönüştür ve getComicsDetail fonksiyonunu çağır
     getComicsDetail(parseInt(newId));
   }
 );

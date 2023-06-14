@@ -67,28 +67,26 @@
 
 <script lang="ts" setup>
 import "vue3-carousel/dist/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { Carousel, Slide } from "vue3-carousel";
 import { getComics, data } from "./services/comics";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 import Loading from "../../../components/Loading.vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { addToFavorites } from "../../../utils/myUtils";
 
 const store = useStore();
 const router = useRouter();
-const show: boolean = false;
 // const favoriteCount = computed(() => store.getters.favoriteItemCount);
 
 const isFavorite = (dataDetail) => {
   return store.getters.isItemInFavorites(dataDetail);
 };
 
-// const openExpand = (id) => {
-//   show = !show
-// };
-
-const addOrRemoveFavorite = (dataDetail, id) => {
+/**
+ * Favorilere ekleme veya favorilerden çıkarma işlemini gerçekleştirir.
+ * @param dataDetail Favoriye eklenecek veya çıkarılacak veri detayı
+ */
+const addOrRemoveFavorite = (dataDetail: []) => {
   const isFavorite = store.getters.isItemInFavorites(dataDetail);
 
   if (isFavorite) {
@@ -98,19 +96,25 @@ const addOrRemoveFavorite = (dataDetail, id) => {
   }
 };
 
-const truncateDescription = (description: string) => {
-  if (description && description.length > 10) {
-    return description.slice(0, 10) + "...";
-  }
-  return description;
-};
+// const truncateDescription = (description: string) => {
+//   if (description && description.length > 10) {
+//     return description.slice(0, 10) + "...";
+//   }
+//   return description;
+// };
 
-const goDetail = (id) => {
+/**
+ * Belirlenen bir Comics detay sayfasına yönlendirir.
+ * @param id - Comics ID'si
+ */
+const goDetail = (id: string) => {
   router.push(`/comics/${id}`);
 };
 
+/**
+ * Sayfa yüklendiğinde Comics verilerini alır.
+ */
 onMounted(() => {
-  console.log(data, "data");
   getComics();
 });
 </script>
