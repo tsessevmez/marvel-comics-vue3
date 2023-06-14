@@ -29,8 +29,6 @@
               {{ marvel.title }}
             </v-card-title>
 
-            <v-card-subtitle> 1,000 miles of wonder </v-card-subtitle>
-
             <v-card-actions>
               <v-btn
                 color="orange-lighten-2"
